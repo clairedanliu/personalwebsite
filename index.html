@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Claire Liu - Personal Site v1.4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;700;800&family=Caveat:wght@400;500&family=Noto+Sans+SC:wght@400&display=swap" />
+<style>
+  /* ═══ design tokens ═══
+   type system
+   · display     — Inter 800, tight tracking, hero + section titles
+   · heading     — Inter 700, card headlines (timeline, products)
+   · body        — Inter 400/500, paragraphs + UI
+   · italic note — Fraunces italic, reflections / quotes only
+   · hand        — Caveat, section subtitles + scroll hint
+  */
+  :root {
+    --bg:        #FAFAF7;
+    --ink:       #1a1a1a;
+    --ink-2:     #4a4a4a;
+    --ink-3:     #6a6a6a;
+    --ink-4:     #8a8a8a;
+    --line:      #e5e3dd;
+    --line-2:    #d8d5cd;
+    --accent:    #2C3A56;   /* deep navy — quotes, italic accents */
+    --highlight: #B86F2F;   /* warm amber — 'now', interactive */
+    --card:      #ffffff;
+    --card-soft: #f4f1ea;
+    --timeline-leading-space: 0px;
+
+    --maxw: 1200px;
+    --pad-x: 80px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  /* ─── lead emoji ─── */
+  .lead-emoji {
+    font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+    font-size: 72px; line-height: 1;
+    display: block; margin: 0 auto 24px;
+    text-align: center; user-select: none;
+  }
+
+  /* ─── section header type ─── */
+  .section-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 56px;
+    line-height: 1.05;
+    letter-spacing: -0.028em;
+    color: var(--ink);
+    text-align: center;
+    margin: 0 0 14px;
+  }
+  .section-sub {
+    font-family: 'Caveat', 'Bradley Hand', cursive;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.4;
+    color: var(--ink-3);
+    text-align: center;
+    margin: 0;
+  }
+
+  /* ───── nav ───── */
+  .nav {
+    display: flex; justify-content: center; align-items: center;
+    gap: 36px;
+    padding: 28px var(--pad-x) 0;
+    max-width: var(--maxw); margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+  }
+  .nav a {
+    text-decoration: none;
+    font-size: 14px; font-weight: 500; color: var(--ink-2);
+    padding: 6px 2px;
+    border-bottom: 1px solid transparent;
+    transition: color .15s, border-color .15s;
+  }
+  .nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+  .nav a.hello {
+    font-family: 'Caveat', 'Bradley Hand', cursive;
+    font-weight: 500; font-size: 20px;
+    color: var(--accent);
+  }
+  .nav a.hello:hover { color: var(--highlight); border-bottom-color: var(--highlight); }
+
+  /* ───── hero ───── */
+  .hero {
+    min-height: calc(100svh - 272px);
+    padding: 0 var(--pad-x);
+    max-width: var(--maxw); margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    text-align: center;
+  }
+  .hero-main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(10px);
+  }
+  .hero .lead-emoji { font-size: 80px; margin-bottom: 28px; }
+  .hero h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 82px;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 0 0 14px;
+    color: var(--ink);
+  }
+  .hero-sub {
+    font-family: 'Caveat', 'Bradley Hand', cursive;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.4;
+    color: var(--ink-3);
+    margin: 0 auto;
+    max-width: 640px;
+  }
+  .hero-scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    font-family: 'Caveat', 'Bradley Hand', cursive;
+    font-size: 24px;
+    line-height: 1.2;
+    color: var(--highlight);
+    opacity: 0.92;
+  }
+
+  /* ───── section header layout ───── */
+  .sec-head {
+    padding: 84px var(--pad-x) 48px;
+    max-width: var(--maxw); margin: 0 auto;
+    text-align: center;
+  }
+
+  /* ───── timeline (reflection-led, V5) ───── */
+  .timeline-section { border-top: 1px solid var(--line); }
+  .timeline-scroll {
+    overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 0 40px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .timeline-scroll::-webkit-scrollbar { display: none; }
+
+  .tl-rail {
+    position: relative;
+    display: flex; gap: 0;
+    padding:
+      84px
+      calc(var(--pad-x) - 18px)
+      40px
+      calc(var(--pad-x) - 18px + var(--timeline-leading-space));
+    min-width: max-content;
+    align-items: flex-start;
+  }
+  .tl-rail::before {
+    content: ''; position: absolute;
+    left: calc(var(--pad-x) - 18px + var(--timeline-leading-space));
+    right: calc(var(--pad-x) - 18px);
+    top: 84px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line-2) 6%, var(--line-2) 94%, transparent);
+  }
+
+  .tl-card {
+    flex: 0 0 380px;
+    width: 380px;
+    padding: 42px 18px 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .tl-card + .tl-card { border-left: 1px dashed var(--line); }
+
+  .tl-marker {
+    position: absolute;
+    top: -44px; left: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .tl-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    position: relative;
+    z-index: 1;
+  }
+  .tl-card.now .tl-dot {
+    background: var(--highlight);
+    border-color: var(--highlight);
+    box-shadow: 0 0 0 6px rgba(184,111,47,0.15);
+  }
+  .tl-year {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+    line-height: 16px;
+    height: 16px;
+    margin-bottom: 22px;
+  }
+  .tl-card.now .tl-year { color: var(--highlight); }
+  .tl-year .now-tag { color: var(--highlight); margin-left: 4px; }
+
+  .tl-foot {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .tl-tags {
+    padding-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 8px;
+  }
+  .tl-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: var(--card-soft);
+    border: 1px solid rgba(216,213,205,0.88);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .tl-theme {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    margin-bottom: 8px;
+  }
+  .tl-card.now .tl-theme { color: var(--highlight); }
+  .tl-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 16px; line-height: 1.3;
+    letter-spacing: -0.012em;
+    margin: 0 0 4px; color: var(--ink);
+  }
+  .tl-org {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--ink-3);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 1px;
+  }
+  .tl-at {
+    display: inline-block;
+    color: var(--ink-4);
+    transform: translateY(0.2px);
+  }
+
+  .tl-hint {
+    font-family: 'Caveat', 'Bradley Hand', cursive;
+    font-size: 20px; color: var(--highlight);
+    padding: 0 var(--pad-x) 12px;
+    max-width: var(--maxw); margin: 0 auto;
+    text-align: center;
+  }
+
+  /* ───── work ───── */
+  .work-section { padding-bottom: 64px; }
+  .work-list {
+    max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad-x);
+    display: flex; flex-direction: column; gap: 96px;
+  }
+  .prod {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 64px; align-items: center;
+  }
+  .prod.flip { grid-template-columns: 1fr 1.1fr; }
+  .prod.flip .prod-img { order: 2; }
+  .prod.flip .prod-text { order: 1; }
+
+  /* ── Glimmo full-bleed screens layout ── */
+  .prod.prod-glimmo,
+  .prod.prod-aol {
+    grid-template-columns: minmax(280px, 0.72fr) minmax(520px, 1.28fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+    overflow: visible;
+    margin-right: calc(50% - 50vw); /* let screens bleed off the right edge */
+    padding-right: 0;
+  }
+  .prod.prod-glimmo .prod-text,
+  .prod.prod-aol .prod-text {
+    max-width: 360px;
+    padding: 0 4px 0 4px;
+    position: relative;
+    z-index: 2;
+  }
+  .prod.prod-muggle {
+    display: block;
+    position: relative;
+    min-height: clamp(380px, 41vw, 500px);
+    overflow: visible;
+    margin-right: 0;
+    padding-right: 0;
+  }
+  .prod.prod-muggle .prod-text {
+    width: 460px;
+    max-width: 460px;
+    padding: 0 4px 0 4px;
+    margin-left: 0;
+    position: absolute;
+    left: 773px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+  .prod.prod-muggle .prod-name {
+    width: 420px;
+    max-width: 420px;
+  }
+  .prod.prod-muggle .prod-keywords {
+    max-width: 460px;
+  }
+  .prod-name-xl {
+    font-size: 54px !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.03em !important;
+    margin-bottom: 12px !important;
+  }
+  .prod-tag-hand {
+    font-family: 'Caveat', 'Bradley Hand', cursive !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: 24px !important;
+    color: var(--ink-3) !important;
+    margin-bottom: 22px !important;
+  }
+  .prod-screens {
+    position: relative;
+    width: min(790px, calc(100% + 2vw));
+    height: clamp(380px, 41vw, 500px);
+    margin-left: 8px;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--bg);
+  }
+  .prod-screens::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg,
+        var(--bg) 0%,
+        rgba(250,250,247,0.76) 2%,
+        rgba(250,250,247,0) 7%,
+        rgba(250,250,247,0) 90%,
+        rgba(250,250,247,0.78) 96%,
+        var(--bg) 100%),
+      linear-gradient(180deg,
+        var(--bg) 0%,
+        rgba(250,250,247,0.68) 5%,
+        rgba(250,250,247,0) 12%,
+        rgba(250,250,247,0) 91%,
+        rgba(250,250,247,0.76) 97%,
+        var(--bg) 100%);
+  }
+  .glimmo-shot {
+    position: absolute;
+    left: 18px;
+    top: calc(55% + 86px);
+    display: block;
+    width: clamp(466px, 39.8vw, 592px);
+    height: auto;
+    max-width: none;
+    transform: translateY(-50%);
+    filter: drop-shadow(0 18px 34px rgba(44,58,86,0.08));
+  }
+
+  .aol-screens {
+    position: relative;
+    width: min(790px, calc(100% + 2vw));
+    height: clamp(380px, 41vw, 500px);
+    margin-left: 8px;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--bg);
+  }
+  .aol-screens::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at top right,
+        rgba(250,250,247,0.88) 0%,
+        rgba(250,250,247,0.62) 12%,
+        rgba(250,250,247,0) 30%),
+      radial-gradient(circle at bottom left,
+        rgba(250,250,247,0.84) 0%,
+        rgba(250,250,247,0.52) 10%,
+        rgba(250,250,247,0) 28%),
+      linear-gradient(90deg,
+        var(--bg) 0%,
+        rgba(250,250,247,0.76) 2%,
+        rgba(250,250,247,0) 7%,
+        rgba(250,250,247,0) 90%,
+        rgba(250,250,247,0.78) 96%,
+        var(--bg) 100%),
+      linear-gradient(180deg,
+        var(--bg) 0%,
+        rgba(250,250,247,0.68) 5%,
+        rgba(250,250,247,0) 12%,
+        rgba(250,250,247,0) 91%,
+        rgba(250,250,247,0.76) 97%,
+        var(--bg) 100%);
+  }
+  .aol-shot {
+    position: absolute;
+    left: -6px;
+    top: 56%;
+    display: block;
+    width: clamp(470px, 39vw, 610px);
+    height: auto;
+    max-width: none;
+    transform: translateY(-50%);
+    filter: drop-shadow(0 18px 34px rgba(44,58,86,0.08));
+  }
+
+  .muggle-screens {
+    position: relative;
+    width: min(720px, calc(100% + 2vw));
+    height: clamp(380px, 41vw, 500px);
+    margin-right: 0;
+    position: absolute;
+    left: -187px;
+    top: 50%;
+    transform: translateY(-50%);
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--bg);
+  }
+  .muggle-screens::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg,
+        var(--bg) 0%,
+        rgba(250,250,247,0.76) 2%,
+        rgba(250,250,247,0) 7%,
+        rgba(250,250,247,0) 90%,
+        rgba(250,250,247,0.78) 96%,
+        var(--bg) 100%),
+      linear-gradient(180deg,
+        var(--bg) 0%,
+        rgba(250,250,247,0.68) 5%,
+        rgba(250,250,247,0) 12%,
+        rgba(250,250,247,0) 91%,
+        rgba(250,250,247,0.76) 97%,
+        var(--bg) 100%);
+  }
+  .prod-img.muggle {
+    background: var(--bg);
+  }
+  .muggle-shot {
+    position: absolute;
+    left: 44%;
+    top: 44%;
+    width: 130%;
+    height: auto;
+    max-width: none;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 20px 34px rgba(44,58,86,0.08));
+  }
+
+  .prod-img {
+    width: 100%; aspect-ratio: 4/3;
+    border-radius: 6px;
+    background: #ece9e1;
+    position: relative; overflow: hidden;
+  }
+  .prod-img.glimmo { background: #e8e2d4; }
+  .prod-img.muggle { background: var(--bg); }
+  .prod-img.aol    { background: #e6e6e0; }
+  .prod-img-label {
+    position: absolute; left: 24px; bottom: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 500;
+    color: rgba(26,26,26,0.45);
+    letter-spacing: 0.04em;
+    z-index: 2;
+  }
+  .prod-img-emoji {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;
+    font-size: 130px;
+    user-select: none; pointer-events: none;
+    transform: translateY(-4px);
+  }
+  .prod-img-stamp {
+    position: absolute; right: 22px; top: 18px;
+    font-family: 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;
+    font-size: 20px;
+  }
+
+  .prod-text { padding: 0 4px; }
+  .prod-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 32px; line-height: 1.15;
+    letter-spacing: -0.022em;
+    margin: 0 0 8px; color: var(--ink);
+  }
+  .prod-cn {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 13px; color: var(--ink-4);
+    margin-bottom: 14px;
+  }
+  .prod-tag {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic; font-weight: 400;
+    font-size: 19px; line-height: 1.45;
+    color: var(--accent);
+    margin: 0 0 16px; max-width: 480px;
+  }
+  .prod-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px; line-height: 1.7;
+    color: var(--ink-2); margin: 0;
+    max-width: 480px;
+  }
+  .prod-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 8px;
+    max-width: 440px;
+    margin-top: 4px;
+  }
+  .prod-keyword {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: var(--card-soft);
+    border: 1px solid rgba(216,213,205,0.88);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+
+  /* ───── connect ───── */
+  .connect-section {
+    padding: 84px 0 24px;
+    margin-top: 72px;
+  }
+  .connect-inner {
+    max-width: calc(var(--maxw) + 32px);
+    margin: 0 auto;
+    padding: 40px 42px 36px;
+    border-radius: 28px;
+    background: transparent;
+  }
+  .connect-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+    gap: 52px;
+    align-items: center;
+  }
+  .connect-note {
+    min-height: 522px;
+    width: calc(99% - 14.85px);
+    padding: 67px 48px 67px;
+    border: 1px solid rgba(216,213,205,0.82);
+    border-radius: 18px;
+    background: #FFFDF6;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    transform: rotate(-2deg);
+    transform-origin: 50% 50%;
+  }
+  .connect-note .lead-emoji {
+    margin: 0 0 18px;
+    font-size: 72px;
+    text-align: left;
+  }
+  .connect-note .section-title {
+    margin: 0 0 22px;
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.028em;
+    text-align: left;
+  }
+  .connect-note-body {
+    margin: 0;
+    max-width: 100%;
+    font-family: 'Caveat', 'Bradley Hand', cursive;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.4;
+    color: var(--ink-3);
+    letter-spacing: 0;
+    text-wrap: pretty;
+  }
+  .connect-note-body a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: rgba(44,58,86,0.35);
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color .15s;
+  }
+  .connect-note-body a:hover { color: var(--highlight); }
+  .connect-note-follow { margin-top: 22px; }
+  .connect-note-ps {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(216,213,205,0.58);
+    opacity: 0.72;
+  }
+  .connect-email {
+    display: block;
+    margin: 0;
+    padding-bottom: 0;
+    text-decoration: none;
+    font-family: 'Caveat', 'Bradley Hand', cursive;
+    font-size: 24px;
+    line-height: 1.4;
+    color: var(--highlight);
+    transition: color .15s, transform .15s;
+  }
+  .connect-email:hover { color: #9f5f28; transform: translateX(2px); }
+  .connect-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px 16px;
+    transform: scale(0.85);
+    transform-origin: center center;
+  }
+  .connect-avatar {
+    width: 187px;
+    height: 187px;
+    margin: 0 auto 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .connect-avatar img {
+    width: 98%;
+    height: 98%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+  }
+  .connect-handle {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(33px, 2.75vw, 42px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+  }
+  .connect-handle-sub {
+    margin: 27px 0 14px;
+    font-family: 'Caveat', 'Bradley Hand', cursive;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--ink-3);
+  }
+  .connect-socials {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .connect-socials a {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    text-decoration: none;
+    transition: transform .18s ease, opacity .18s ease;
+  }
+  .connect-socials a:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+  .connect-socials img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    display: block;
+  }
+  /* ───── responsive ───── */
+  @media (max-width: 900px) {
+    :root { --pad-x: 24px; }
+    .hero {
+      min-height: calc(100svh - 198px);
+      padding: 0 var(--pad-x);
+    }
+    .hero-main { transform: translateY(6px); }
+    .hero .lead-emoji { font-size: 64px; margin-bottom: 20px; }
+    .hero h1 { font-size: 54px; }
+    .hero-sub { font-size: 22px; }
+    .hero-scroll { font-size: 20px; bottom: 14px; }
+    .sec-head { padding: 60px var(--pad-x) 32px; }
+    .lead-emoji { font-size: 56px; margin-bottom: 18px; }
+    .section-title { font-size: 38px; }
+    .section-sub { font-size: 20px; }
+  .timeline-scroll { padding: 8px var(--pad-x) 40px; }
+    .work-list { gap: 56px; }
+    .prod, .prod.flip { grid-template-columns: 1fr; gap: 24px; }
+    .prod.flip .prod-img { order: 0; }
+    .prod.flip .prod-text { order: 0; }
+    .prod.prod-glimmo,
+    .prod.prod-aol,
+    .prod.prod-muggle { margin-right: 0; margin-left: 0; grid-template-columns: 1fr; gap: 24px; }
+    .prod.prod-muggle {
+      display: grid;
+      position: static;
+      min-height: 0;
+    }
+    .prod.prod-muggle .prod-text {
+      width: auto;
+      margin-left: 0;
+      position: relative;
+      left: auto;
+      top: auto;
+      transform: none;
+    }
+    .prod.prod-glimmo .prod-screens {
+      width: 100%;
+      height: clamp(320px, 72vw, 440px);
+      margin-left: 0;
+      overflow: hidden;
+    }
+    .glimmo-shot {
+      left: 50%;
+      top: calc(54% + 82px);
+      width: 96%;
+      height: auto;
+      transform: translate(-40%, -50%);
+    }
+    .prod.prod-aol .aol-screens {
+      width: 100%;
+      height: clamp(320px, 72vw, 440px);
+      margin-left: 0;
+      overflow: hidden;
+    }
+    .aol-shot {
+      left: 50%;
+      top: 56%;
+      width: 92%;
+      height: auto;
+      transform: translate(-49%, -50%);
+    }
+    .muggle-shot {
+      width: 140%;
+      left: 44%;
+      top: 44%;
+    }
+    .prod.prod-muggle .muggle-screens {
+      width: 100%;
+      height: clamp(320px, 72vw, 440px);
+      margin-right: 0;
+      position: relative;
+      left: auto;
+      top: auto;
+      transform: none;
+      overflow: hidden;
+    }
+    .prod-name-xl { font-size: 40px !important; }
+    .prod-tag-hand { font-size: 20px !important; }
+    .prod-name { font-size: 26px; }
+    .prod-tag { font-size: 17px; }
+    .connect-section { padding: 64px 0 24px; }
+    .connect-inner {
+      padding: 30px 22px 28px;
+      border-radius: 24px;
+    }
+    .connect-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .connect-note {
+      min-height: 0;
+      width: 100%;
+      padding: 36px 28px 34px;
+      transform: rotate(-1.25deg);
+    }
+    .connect-note .lead-emoji {
+      font-size: 52px;
+      margin-bottom: 18px;
+    }
+    .connect-note .section-title {
+      font-size: 38px;
+      margin-bottom: 20px;
+    }
+    .connect-note-body {
+      max-width: none;
+      font-size: 20px;
+    }
+    .connect-note-follow { margin-top: 20px; }
+    .connect-email { font-size: 20px; }
+    .connect-email {
+      font-size: 42px;
+    }
+    .connect-side {
+      padding: 10px 6px 0;
+      transform: none;
+    }
+    .connect-avatar {
+      width: 152px;
+      height: 152px;
+      margin-bottom: 24px;
+      font-size: 48px;
+    }
+    .connect-handle {
+      font-size: 34px;
+    }
+    .connect-handle-sub {
+      margin: 8px 0 24px;
+      font-size: 34px;
+    }
+    .connect-socials {
+      gap: 16px;
+    }
+    .connect-socials a,
+    .connect-socials .ico-xhs svg {
+      width: 78px;
+      height: 78px;
+    }
+    .connect-socials .ico-jike,
+    .connect-socials .ico-threads {
+      font-size: 38px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#about">About</a>
+  <a href="#experience">Experience</a>
+  <a href="#work">Work</a>
+  <a href="#contact" class="hello">say hello</a>
+</nav>
+
+<!-- ═══ Hero / About ═══ -->
+<section id="about" class="hero">
+  <div class="hero-main">
+    <div class="lead-emoji" aria-hidden="true">👋🏼</div>
+    <h1>Hi, I&rsquo;m Claire.</h1>
+    <p class="hero-sub">An atypical PM. A builder in ed-tech.</p>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">follow the thread ↓</div>
+</section>
+
+<!-- ═══ Experience ═══ -->
+<section id="experience" class="timeline-section">
+  <header class="sec-head">
+    <div class="lead-emoji" aria-hidden="true">🚢</div>
+    <h2 class="section-title">The line that runs through.</h2>
+    <p class="section-sub">about education, and what learning could be</p>
+  </header>
+
+  <div class="timeline-scroll">
+    <div class="tl-rail">
+
+      <article class="tl-card now">
+        <div class="tl-marker">
+          <div class="tl-year">2025 – NOW</div>
+          <div class="tl-dot"></div>
+        </div>
+        <div class="tl-foot">
+          <div class="tl-theme">Learning science x AI</div>
+          <h3 class="tl-headline">Reimagining AI learning</h3>
+          <div class="tl-org"><span class="tl-at">@</span><span class="tl-org-text">Bytedance</span></div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag">#Learner Portrait</span>
+          <span class="tl-tag">#Generative Curriculum</span>
+          <span class="tl-tag">#Dynamic Learning Paths</span>
+        </div>
+      </article>
+
+      <article class="tl-card">
+        <div class="tl-marker">
+          <div class="tl-year">2024</div>
+          <div class="tl-dot"></div>
+        </div>
+        <div class="tl-foot">
+          <div class="tl-theme">STARTUP</div>
+          <h3 class="tl-headline">Built my own AI app</h3>
+          <div class="tl-org"><span class="tl-at">@</span><span class="tl-org-text">Glimmo</span></div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag">#LLM-powered self-reflection</span>
+          <span class="tl-tag">#AI emotion analytics</span>
+          <span class="tl-tag">#0 → 1 product lead</span>
+          <span class="tl-tag">#Product IP design</span>
+        </div>
+      </article>
+
+      <article class="tl-card">
+        <div class="tl-marker">
+          <div class="tl-year">2022</div>
+          <div class="tl-dot"></div>
+        </div>
+        <div class="tl-foot">
+          <div class="tl-theme">Learning experience design</div>
+          <h3 class="tl-headline">Designed gamified learning</h3>
+          <div class="tl-org"><span class="tl-at">@</span><span class="tl-org-text">TAL Education Group</span></div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag">#Gamified learning system</span>
+          <span class="tl-tag">#Psychology of behavior</span>
+        </div>
+      </article>
+
+      <article class="tl-card">
+        <div class="tl-marker">
+          <div class="tl-year">2019</div>
+          <div class="tl-dot"></div>
+        </div>
+        <div class="tl-foot">
+          <div class="tl-theme">EdTech</div>
+          <h3 class="tl-headline">Live online classes for K12</h3>
+          <div class="tl-org"><span class="tl-at">@</span><span class="tl-org-text">TAL Education Group</span></div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag">#Live online classes</span>
+          <span class="tl-tag">#Adaptive learning system</span>
+          <span class="tl-tag">#K12 in China</span>
+        </div>
+      </article>
+
+      <article class="tl-card">
+        <div class="tl-marker">
+          <div class="tl-year">2018</div>
+          <div class="tl-dot"></div>
+        </div>
+        <div class="tl-foot">
+          <div class="tl-theme">Education equity</div>
+          <h3 class="tl-headline">College admissions officer</h3>
+          <div class="tl-org"><span class="tl-at">@</span><span class="tl-org-text">Duke Kunshan University</span></div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag">#Student Admission</span>
+          <span class="tl-tag">#College recruitment</span>
+          <span class="tl-tag">#Higher Ed. Administration</span>
+        </div>
+      </article>
+
+      <article class="tl-card">
+        <div class="tl-marker">
+          <div class="tl-year">2016</div>
+          <div class="tl-dot"></div>
+        </div>
+        <div class="tl-foot">
+          <div class="tl-theme">Education research</div>
+          <h3 class="tl-headline">M.Ed. in international ed</h3>
+          <div class="tl-org"><span class="tl-at">@</span><span class="tl-org-text">Vanderbilt University</span></div>
+        </div>
+        <div class="tl-tags">
+          <span class="tl-tag">#Comparative education policy</span>
+          <span class="tl-tag">#Education equity</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+  <div class="tl-hint">← scroll back through the questions →</div>
+</section>
+
+<!-- ═══ Things I built ═══ -->
+<section id="work" class="work-section">
+  <header class="sec-head">
+    <div class="lead-emoji" aria-hidden="true">🪐</div>
+    <h2 class="section-title">Things I built.</h2>
+    <p class="section-sub">a few products i&rsquo;ve poured myself into</p>
+  </header>
+
+  <div class="work-list">
+    <article class="prod prod-glimmo">
+      <div class="prod-text">
+        <h3 class="prod-name prod-name-xl">Glimmo</h3>
+        <p class="prod-tag prod-tag-hand">an AI journal app for gen z</p>
+        <div class="prod-keywords" aria-label="Glimmo keywords">
+          <span class="prod-keyword">#LLM-powered self-reflection</span>
+          <span class="prod-keyword">#AI emotion analytics</span>
+          <span class="prod-keyword">#Mental wellness</span>
+          <span class="prod-keyword">#Gen Z</span>
+        </div>
+      </div>
+      <div class="prod-screens">
+        <img class="glimmo-shot" src="assets/glimmo.png" alt="Glimmo app screens showing journaling, album, monthly insights, and collections views.">
+      </div>
+    </article>
+
+    <article class="prod prod-muggle">
+      <div class="muggle-screens">
+        <img class="muggle-shot" src="assets/muggle.png" alt="Muggle AI Tutor mobile app screens for language tutoring and speaking practice.">
+      </div>
+      <div class="prod-text">
+        <h3 class="prod-name prod-name-xl">Muggle AI Tutor</h3>
+        <p class="prod-tag prod-tag-hand">an AI language tutor<br>for non-native speakers</p>
+        <div class="prod-keywords" aria-label="Muggle AI Tutor keywords">
+          <span class="prod-keyword">#AI language tutor</span>
+          <span class="prod-keyword">#Non-native speakers</span>
+          <span class="prod-keyword">#Conversational learning</span>
+          <span class="prod-keyword">#Speaking confidence</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="prod prod-aol">
+      <div class="prod-text">
+        <h3 class="prod-name prod-name-xl">Academy of Legend</h3>
+        <p class="prod-tag prod-tag-hand">a gamified learning experience<br>designed for kids</p>
+        <div class="prod-keywords" aria-label="Academy of Legend keywords">
+          <span class="prod-keyword">#Game × Education</span>
+          <span class="prod-keyword">#Behavioral design</span>
+          <span class="prod-keyword">#Progression system</span>
+        </div>
+      </div>
+      <div class="aol-screens">
+        <img class="aol-shot" src="assets/academy-of-legend.png" alt="Academy of Legend reward tiers from Wood and Silver through Gold and Diamond.">
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══ Connect ═══ -->
+<section id="contact" class="connect-section">
+  <div class="connect-inner">
+    <div class="connect-grid">
+      <div class="connect-note">
+        <div class="lead-emoji" aria-hidden="true">🙌🏼</div>
+        <h2 class="section-title">Say hello.</h2>
+        <p class="connect-note-body">i love good conversations — especially the ones that start with a half-formed thought and end somewhere neither of us expected.</p>
+        <p class="connect-note-body connect-note-follow">If you&rsquo;ve got one brewing, write me at</p>
+        <a class="connect-email" href="mailto:claire.d.liu@outlook.com">claire.d.liu@outlook.com.</a>
+        <p class="connect-note-body connect-note-ps">p.s. If you&rsquo;re a student or early in your career and just want a sounding board, you can also <a href="#">book a slot</a> &rarr;</p>
+      </div>
+
+      <div class="connect-side">
+        <div class="connect-avatar" aria-hidden="true">
+          <img src="assets/avatar-claire.png" alt="Claire avatar">
+        </div>
+        <p class="connect-handle">@Claire</p>
+        <p class="connect-handle-sub">find me here</p>
+        <div class="connect-socials">
+          <a href="https://xhslink.com/m/4lH5gJU9Aed" class="ico-xhs" aria-label="小红书" target="_blank" rel="noreferrer">
+            <img src="assets/logo_xiaohongshu.png" alt="小红书">
+          </a>
+          <a href="https://m.okjike.com/users/819B71D6-13F2-43C7-B727-F7DD81F0E7E3?ref=PROFILE_CARD&utm_source=user_card" class="ico-jike" aria-label="即刻" target="_blank" rel="noreferrer">
+            <img src="assets/logo_jike.png" alt="即刻">
+          </a>
+          <a href="https://www.threads.com/@claire.dan.liu?igshid=NTc4MTIwNjQ2YQ==" class="ico-threads" aria-label="Threads" target="_blank" rel="noreferrer">
+            <img src="assets/logo_threads.png" alt="Threads">
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  (() => {
+    const timeline = document.querySelector('.timeline-scroll');
+    const experienceSection = document.querySelector('#experience');
+    const root = document.documentElement;
+    if (!timeline || !experienceSection) return;
+
+    const setTimelineLead = () => {
+      const rootStyles = getComputedStyle(root);
+      const maxw = parseFloat(rootStyles.getPropertyValue('--maxw')) || 1200;
+      const viewportWidth = window.innerWidth;
+      const leading = Math.max(0, Math.round((viewportWidth - maxw) / 2));
+      root.style.setProperty('--timeline-leading-space', `${leading}px`);
+    };
+
+    const forceTimelineStart = () => {
+      timeline.scrollLeft = 0;
+      requestAnimationFrame(() => {
+        timeline.scrollLeft = 0;
+        requestAnimationFrame(() => {
+          timeline.scrollLeft = 0;
+        });
+      });
+      setTimeout(() => {
+        timeline.scrollLeft = 0;
+      }, 120);
+    };
+
+    const resetTimeline = () => {
+      setTimelineLead();
+      forceTimelineStart();
+    };
+
+    let experienceActive = false;
+
+    const resetIfExperience = () => {
+      if (window.location.hash === '#experience') {
+        requestAnimationFrame(resetTimeline);
+      }
+    };
+
+    window.addEventListener('resize', () => {
+      requestAnimationFrame(() => {
+        setTimelineLead();
+        if (window.location.hash === '#experience') {
+          forceTimelineStart();
+        }
+      });
+    });
+    window.addEventListener('pageshow', resetIfExperience);
+    window.addEventListener('load', resetIfExperience);
+    window.addEventListener('hashchange', resetIfExperience);
+    window.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(resetTimeline);
+    });
+
+    document.querySelectorAll('a[href$="#experience"]').forEach((link) => {
+      link.addEventListener('click', () => {
+        requestAnimationFrame(resetTimeline);
+      });
+    });
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+          if (!experienceActive) {
+            experienceActive = true;
+            requestAnimationFrame(resetTimeline);
+            setTimeout(resetTimeline, 120);
+          }
+        } else {
+          experienceActive = false;
+        }
+      },
+      {
+        threshold: [0.55]
+      }
+    );
+
+    observer.observe(experienceSection);
+  })();
+</script>
+</body>
+</html>
